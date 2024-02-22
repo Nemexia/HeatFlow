@@ -7,5 +7,6 @@ model = models.Model()
 model.plot_mode()
 
 while True:
-    model.plot_temp()
-    model.step()
+    if model.steps %10 == 0:
+        model.plot_temp(0.1)
+    model.step(0.1)
