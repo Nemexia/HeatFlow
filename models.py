@@ -48,7 +48,9 @@ class Model:
         plt.pause(delay)
         
     def plot_mode(self) -> None:
+        plt.figure(0)
+        plt.title('0:conductor  -1:insulator  1:constant')
         plt.imshow(self.mode, cmap='binary')
         plt.colorbar()
-        plt.show()
+        plt.draw()
         
