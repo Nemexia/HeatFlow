@@ -49,5 +49,6 @@ class Model:
         
     def plot_mode(self) -> None:
         plt.imshow(self.mode, cmap='binary')
+        plt.colorbar()
         plt.show()
         
