@@ -4,9 +4,7 @@ import numpy as np
 import models
 
 model = models.Model()
-
-plt.imshow(model.mode, cmap='binary')
-plt.show()
+model.plot_mode()
 
 while True:
     model.plot_temp()

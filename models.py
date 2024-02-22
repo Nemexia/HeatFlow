@@ -47,3 +47,7 @@ class Model:
         plt.contour(temp, levels=num, colors=['black'], linewidths=0.5)
         plt.pause(0.1)
         
+    def plot_mode(self):
+        plt.imshow(self.mode, cmap='binary')
+        plt.show()
+        
