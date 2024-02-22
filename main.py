@@ -21,8 +21,9 @@ def step(space, mode):
     return next_space
 
 
-model = models.material
-mode = models.mode
+model = models.Model()
+temp = model.temperature
+mode = model.mode
 plot = plotter.plot
 
 
@@ -30,6 +31,6 @@ plt.imshow(mode, cmap='binary')
 plt.show()
 
 while True:
-    plot(model)
-    model = step(model, mode)
+    plot(temp)
+    temp = step(temp, mode)
     # input()

@@ -11,4 +11,4 @@ def plot(space: np.ndarray) -> None:
     plt.imshow(space, cmap='plasma')
     plt.colorbar()
     plt.contour(space, levels=num, colors=['black'], linewidths=0.5)
-    plt.pause(0.0001)
+    plt.pause(0.1)
