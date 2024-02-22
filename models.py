@@ -1,7 +1,9 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Model:
-    def __init__(self, space_size = (100, 100)) -> None:
+    def __init__(self, space_size = (20, 20)) -> None:
         self.space_size = space_size
         
         # temperature definition
@@ -33,4 +35,15 @@ class Model:
                                 count += 1
                     next_temp[x, y] = total / count
         self.temperature = next_temp
+        
+    def plot_temp(self):
+        # temp = self.temperature[1:-1, 1:-1]
+        temp = self.temperature
+        plt.figure(1)
+        plt.clf()
+        num = int((temp.max() - temp.min()) / 10) if int((temp.max() - temp.min()) / 10) < 10 else 10
+        plt.imshow(temp, cmap='plasma')
+        plt.colorbar()
+        plt.contour(temp, levels=num, colors=['black'], linewidths=0.5)
+        plt.pause(0.1)
         
