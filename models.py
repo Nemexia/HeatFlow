@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 class Model:
     def __init__(self, space_size:tuple[int] = (20, 20)) -> None:
         self.space_size:tuple[int] = space_size
+        self.steps:int = 0
         
         # temperature definition
         self.temperature:np.ndarray = np.ones(self.space_size) * 500
@@ -21,22 +22,20 @@ class Model:
         self.mode[1:-1, 0] = -1
         self.mode[1:-1, self.space_size[1] - 1] = -1
     
-    def step(self) -> None:
+    def step(self, dt:float = 0.1) -> None:
+        self.steps += 1
         next_temp:np.ndarray = np.copy(self.temperature)
         for x, r in enumerate(self.temperature):
             for y, t in enumerate(r):
                 if self.mode[x, y] == 0:  # if conductor
-                    total:int = 0
-                    count:int = 1
-                    for i in range(x - 1, x + 2):
-                        for j in range(y - 1, y + 2):
-                            if self.mode[i, j] != -1:  # if not insulator
-                                total += self.temperature[i, j]
-                                count += 1
-                    next_temp[x, y] = total / count
+                    change:int = 0
+                    for i, j in ((x-1, y), (x+1, y), (x, y-1), (x, y+1)):
+                        if self.mode[i, j] != -1:  # if not insulator
+                            change += (self.temperature[i, j] - self.temperature[x, y]) * dt
+                    next_temp[x, y] += change
         self.temperature = next_temp
         
-    def plot_temp(self) -> None:
+    def plot_temp(self, delay:float = 0.1) -> None:
         # temp = self.temperature[1:-1, 1:-1]
         temp = self.temperature
         plt.figure(1)
@@ -45,7 +44,8 @@ class Model:
         plt.imshow(temp, cmap='plasma')
         plt.colorbar()
         plt.contour(temp, levels=num, colors=['black'], linewidths=0.5)
-        plt.pause(0.1)
+        plt.title(f'step number {self.steps}')
+        plt.pause(delay)
         
     def plot_mode(self) -> None:
         plt.imshow(self.mode, cmap='binary')
