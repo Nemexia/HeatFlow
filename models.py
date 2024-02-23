@@ -84,3 +84,9 @@ class Model:
         plt.colorbar()
         plt.pause(delay)
         
+if __name__ == "__main__":
+    m = Model()
+    m.plot_mode()
+    m.plot_conductivity()
+    m.plot_capacity()
+    plt.show()
