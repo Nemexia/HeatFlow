@@ -21,6 +21,12 @@ class Model:
 
         self.mode[1:-1, 0] = -1
         self.mode[1:-1, self.space_size[1] - 1] = -1
+        
+        # heat capacity
+        self.heat_capacity:np.ndarray = np.ones(self.space_size) * 1
+        
+        # thermal conductivity 
+        self.thermal_conductivity:np.ndarray = np.ones(self.space_size) * 1
     
     def step(self, dt:float = 0.1) -> None:
         self.steps += 1
