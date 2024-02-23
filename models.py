@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 
 
 class Model:
-    def __init__(self, space_size:tuple[int] = (20, 20)) -> None:
+    def __init__(self, space_size:tuple[int] = (21, 21)) -> None:
         self.space_size:tuple[int] = space_size
         self.steps:int = 0
-        
+        # [Y, X]
         # temperature definition
-        self.temperature:np.ndarray = np.ones(self.space_size) * 500
-        self.temperature[0, :] = 1000
-        self.temperature[self.space_size[0] - 1, :] = 0
+        self.temperature:np.ndarray = np.ones(self.space_size) * 25
+        self.temperature[0, :] = 100
+        self.temperature[self.space_size[0] - 1, :] = 25
         
         # mode definition
         # 0:conductor  -1:insulator  1:constant
@@ -23,10 +23,10 @@ class Model:
         self.mode[1:-1, self.space_size[1] - 1] = -1
         
         # heat capacity
-        self.heat_capacity:np.ndarray = np.ones(self.space_size) * 1
+        self.capacity:np.ndarray = np.ones(self.space_size) * 1
         
         # thermal conductivity 
-        self.thermal_conductivity:np.ndarray = np.ones(self.space_size) * 1
+        self.conductivity:np.ndarray = np.ones(self.space_size) * 1
     
     def step(self, dt:float = 0.1) -> None:
         self.steps += 1
@@ -37,15 +37,15 @@ class Model:
                     change:int = 0
                     for i, j in ((x-1, y), (x+1, y), (x, y-1), (x, y+1)):
                         if self.mode[i, j] != -1:  # if not insulator
-                            equal_temp = ((self.temperature[i, j] * self.heat_capacity[i, j]) + (self.temperature[x, y] * self.heat_capacity[x, y]))/(self.heat_capacity[i, j] + self.heat_capacity[x, y])
-                            change += (equal_temp - self.temperature[x, y]) * min(self.thermal_conductivity[i, j],self.thermal_conductivity[x, y]) * dt
+                            equal_temp = ((self.temperature[i, j] * self.capacity[i, j]) + (self.temperature[x, y] * self.capacity[x, y]))/(self.capacity[i, j] + self.capacity[x, y])
+                            change += (equal_temp - self.temperature[x, y]) * min(self.conductivity[i, j],self.conductivity[x, y]) * dt
                     next_temp[x, y] += change
         self.temperature = next_temp
         
     def plot_temp(self, delay:float = 0.1) -> None:
         # temp = self.temperature[1:-1, 1:-1]
         temp = self.temperature
-        plt.figure(1)
+        plt.figure(0)
         plt.clf()
         num = int((temp.max() - temp.min()) / 10) if int((temp.max() - temp.min()) / 10) < 10 else 10
         plt.imshow(temp, cmap='plasma')
@@ -55,9 +55,32 @@ class Model:
         plt.pause(delay)
         
     def plot_mode(self) -> None:
-        plt.figure(0)
+        plt.figure(1)
         plt.title('0:conductor  -1:insulator  1:constant')
         plt.imshow(self.mode, cmap='binary')
         plt.colorbar()
         plt.draw()
+        
+    def plot_conductivity(self) -> None:
+        plt.figure(2)
+        plt.title('Conductivity')
+        plt.imshow(self.conductivity, cmap='binary')
+        plt.colorbar()
+        plt.draw()
+    
+    def plot_capacity(self) -> None:
+        plt.figure(3)
+        plt.title('Capacity')
+        plt.imshow(self.capacity, cmap='binary')
+        plt.colorbar()
+        plt.draw()
+        
+    def plot_energy(self, delay:float = 0.1):
+        energy = self.temperature*self.capacity
+        plt.figure(4)
+        plt.clf()
+        plt.title('Energy')
+        plt.imshow(energy, cmap='hot')
+        plt.colorbar()
+        plt.pause(delay)
         
