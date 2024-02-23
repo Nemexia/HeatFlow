@@ -37,7 +37,8 @@ class Model:
                     change:int = 0
                     for i, j in ((x-1, y), (x+1, y), (x, y-1), (x, y+1)):
                         if self.mode[i, j] != -1:  # if not insulator
-                            change += (self.temperature[i, j] - self.temperature[x, y]) * dt
+                            equal_temp = ((self.temperature[i, j] * self.heat_capacity[i, j]) + (self.temperature[x, y] * self.heat_capacity[x, y]))/(self.heat_capacity[i, j] + self.heat_capacity[x, y])
+                            change += (equal_temp - self.temperature[x, y]) * min(self.thermal_conductivity[i, j],self.thermal_conductivity[x, y]) * dt
                     next_temp[x, y] += change
         self.temperature = next_temp
         
